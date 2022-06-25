@@ -20,3 +20,9 @@ A collection of Python 🐍 scripts made just for fun and learning
 2. Add the following line ``PATH=${absolutePathToRepository}/src:${PATH}`` or modify an existent assignment to match the former.
 3. Save changes and quit the file.
 4. Restart your shell.
+
+
+## Why **euryx**?
+
+
+I wanted to name the repository as a snake and I found the Arizona coral snake, which [farts when attacked](https://en.wikipedia.org/wiki/Micruroides#Defense) 💨.
