@@ -1,3 +1,6 @@
+[![](https://img.shields.io/badge/Python-3-green)](https://docs.python.org/3)   [![](https://img.shields.io/badge/GPL-2.0-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)    [![](https://img.shields.io/badge/Platform-GNU%2FLinux-yellow)](https://en.wikipedia.org/wiki/Linux)
+
+
 # euryx
 A collection of Python 🐍 scripts made just for fun and learning
 
