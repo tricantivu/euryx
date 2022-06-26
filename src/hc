@@ -20,7 +20,11 @@ except KeyError:
     print_error("History file location is null or unset. Check the HISTFILE environment variable.")
     sys.exit(1)
 
-if os.path.getsize(filePath) == 0:
+if not os.path.isfile(filePath):
+    print_error("The value of HISTFILE variable is not an existing file.")
+    sys.exit(1)
+
+elif os.path.getsize(filePath) == 0:
     print_error("Nothing to clear, history file is empty.")
     sys.exit(1)
 
