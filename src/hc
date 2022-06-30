@@ -12,11 +12,9 @@ def print_error(message):
     # https://stackoverflow.com/a/15808105
     print(message, file=sys.stderr)
 
-try:
-    # https://stackoverflow.com/a/5971692
-    filePath = os.environ['HISTFILE']
+filePath = os.getenv('HISTFILE')
 
-except KeyError:
+if filePath is None:
     print_error("History file location is null or unset. Check the HISTFILE environment variable.")
     sys.exit(1)
 
