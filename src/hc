@@ -12,23 +12,23 @@ def print_error(message):
     # https://stackoverflow.com/a/15808105
     print(message, file=sys.stderr)
 
-filePath = os.getenv('HISTFILE')
+historyFile = os.getenv('HISTFILE')
 
-if filePath is None:
+if historyFile is None:
     print_error("History file location is null or unset. Check the HISTFILE environment variable.")
     sys.exit(1)
 
-if not os.path.isfile(filePath):
+if not os.path.isfile(historyFile):
     print_error("The value of HISTFILE variable is not an existing file.")
     sys.exit(1)
 
-elif os.path.getsize(filePath) == 0:
+elif os.path.getsize(historyFile) == 0:
     print_error("Nothing to clear, history file is empty.")
     sys.exit(1)
 
 else:
     try:
-        os.truncate(filePath,0)
+        os.truncate(historyFile,0)
         print("History file cleared successfully.")
 
     except PermissionError:
