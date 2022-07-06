@@ -18,7 +18,7 @@ if historyFile is None:
     print_error("History file location is null or unset. Check the HISTFILE environment variable.")
     sys.exit(1)
 
-if not os.path.isfile(historyFile):
+elif not os.path.isfile(historyFile):
     print_error("The value of HISTFILE variable is not an existing file.")
     sys.exit(1)
 
