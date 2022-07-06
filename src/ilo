@@ -86,3 +86,15 @@ match systemShell:
 # Kernel version.
 with open("/proc/sys/kernel/osrelease") as kernelVersion:
     print(f'Kernel version: {kernelVersion.read()}')
+
+# CPU model names
+print("CPU(s):\n")
+
+with open("/proc/cpuinfo") as cpuInformationFile:
+    for fileLine in cpuInformationFile:
+        if re.match('^(model name)', fileLine):
+            lineFields = fileLine.split(':')
+            # Remove trailing newline and spaces from model name.
+            print(re.sub('\n', '', lineFields[1]).strip())
+        else:
+            continue
