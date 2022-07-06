@@ -20,7 +20,8 @@ if sys.platform != 'linux':
     print(f"{LIGHT_RED}ERROR:{RESET} Information will only be shown for Linux systems.")
     sys.exit(1)
 
-systemHostname = open("/proc/sys/kernel/hostname").read()
+with open("/proc/sys/kernel/hostname") as hostnameFile:
+    systemHostname = hostnameFile.read()
 
 # Print a nice banner.
 
@@ -81,6 +82,5 @@ match systemShell:
         print(f"Shell: {LIGHT_RED}Could not be detected.{RESET}")
 
 # Kernel version.
-kernelVersion = open("/proc/sys/kernel/osrelease").read()
-
-print(f"Kernel version: {kernelVersion}")
+with open("/proc/sys/kernel/osrelease") as kernelVersion:
+    print(f'Kernel version: {kernelVersion.read()}')
