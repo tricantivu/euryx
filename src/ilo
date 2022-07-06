@@ -21,7 +21,7 @@ if sys.platform != 'linux':
     sys.exit(1)
 
 with open("/proc/sys/kernel/hostname") as hostnameFile:
-    systemHostname = hostnameFile.read()
+    systemHostname = re.sub('\n', '', hostnameFile.read())
 
 # Print a nice banner.
 
@@ -29,18 +29,20 @@ with open("/proc/sys/kernel/hostname") as hostnameFile:
 remainingBanner = "-" * len(f"{os.getenv('USER')}@{systemHostname}")
 
 print(f"""
-{LIGHT_YELLOW}-----------------------{remainingBanner}{RESET}
+{LIGHT_YELLOW}------------------------{remainingBanner}{RESET}
 System information for: {os.getenv('USER')}@{systemHostname}
-{LIGHT_YELLOW}-----------------------{remainingBanner}{RESET}
+{LIGHT_YELLOW}------------------------{remainingBanner}{RESET}
 """)
 
 # Show system information.
 
 # Distribution name.
 
-# Get a dictionary with keys and values set in os-release file.
-#
-# Reference: https://stackoverflow.com/a/30020739
+"""
+Get a dictionary with keys and values set in os-release file.
+
+Reference: https://stackoverflow.com/a/30020739
+"""
 
 keyValuePairs = {}
 
