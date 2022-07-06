@@ -28,7 +28,7 @@ elif os.path.getsize(historyFile) == 0:
 
 else:
     try:
-        os.truncate(historyFile,0)
+        os.truncate(historyFile, 0)
         print("History file cleared successfully.")
 
     except PermissionError:
