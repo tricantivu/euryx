@@ -15,15 +15,15 @@ def print_error(message):
 historyFile = os.getenv('HISTFILE')
 
 if historyFile is None:
-    print_error("History file location is null or unset. Check the HISTFILE environment variable.")
+    print_error("No history file to clear.")
     sys.exit(1)
 
 elif not os.path.isfile(historyFile):
-    print_error("The value of HISTFILE variable is not an existing file.")
+    print_error("History file must be a regular file.")
     sys.exit(1)
 
 elif os.path.getsize(historyFile) == 0:
-    print_error("Nothing to clear, history file is empty.")
+    print_error("Can not clear an empty history file.")
     sys.exit(1)
 
 else:
@@ -32,5 +32,5 @@ else:
         print("History file cleared successfully.")
 
     except PermissionError:
-        print_error("Insufficient permissions, make sure the history file has write permission.")
+        print_error("History file must be writable so it can be cleared ")
         sys.exit(1)
