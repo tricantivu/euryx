@@ -16,12 +16,12 @@ LIGHT_GREEN = "\033[92m"
 LIGHT_RED = "\033[91m"
 RESET = "\033[0m"
 
-if sys.platform != 'linux':
+if sys.platform != "linux":
     print(f"{LIGHT_RED}ERROR:{RESET} Information will only be shown for Linux systems.")
     sys.exit(1)
 
 with open("/proc/sys/kernel/hostname") as hostnameFile:
-    systemHostname = re.sub('\n', '', hostnameFile.read())
+    systemHostname = re.sub("\n", "", hostnameFile.read())
 
 # Print a nice banner.
 
@@ -49,7 +49,7 @@ keyValuePairs = {}
 with open("/etc/os-release") as fileLines:
     for keyValuePair in fileLines:
         # Separate variable assignments into keys and values.
-        key, value = keyValuePair.split('=')
+        key, value = keyValuePair.split("=")
         keyValuePairs[key] = value
 
 # Parse distribution name.
@@ -85,17 +85,17 @@ match systemShell:
 
 # Kernel version.
 with open("/proc/sys/kernel/osrelease") as kernelVersion:
-    print(f'Kernel version: {kernelVersion.read()}')
+    print(f"Kernel version: {kernelVersion.read()}")
 
 # CPU model names
 print("CPU(s):\n")
 
 with open("/proc/cpuinfo") as cpuInformationFile:
     for fileLine in cpuInformationFile:
-        if re.match('^(model name)', fileLine):
-            lineFields = fileLine.split(':')
+        if re.match("^(model name)", fileLine):
+            lineFields = fileLine.split(":")
             # Remove trailing newline and spaces from model name.
-            print(re.sub('\n', '', lineFields[1]).strip())
+            print(re.sub("\n", "", lineFields[1]).strip())
         else:
             continue
 
@@ -108,4 +108,4 @@ with open("/proc/uptime") as uptimeFile:
 
 uptimeMinutes, uptimeHours, uptimeDays = round(systemUptime / 60 % 60), round(systemUptime / 60 / 60), round(systemUptime / 60 / 60 / 24)
 
-print(f'\nUptime: {uptimeDays} day(s)    {uptimeHours} hour(s)    {uptimeMinutes} minute(s)')
+print(f"\nUptime: {uptimeDays} day(s)    {uptimeHours} hour(s)    {uptimeMinutes} minute(s)")

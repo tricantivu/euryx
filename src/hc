@@ -12,7 +12,7 @@ def print_error(message):
     # https://stackoverflow.com/a/15808105
     print(message, file=sys.stderr)
 
-historyFile = os.getenv('HISTFILE')
+historyFile = os.getenv("HISTFILE")
 
 if historyFile is None:
     print_error("No history file to clear.")
