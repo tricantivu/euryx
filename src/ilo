@@ -74,9 +74,9 @@ match systemShell:
         print(f"Shell: {systemShell} {shellVersion}")
 
     case "zsh":
-        unparsedVersion = os.popen(f"{systemShell} --version").read().split()
+        lineFields = os.popen(f"{systemShell} --version").read().split()
 
-        shellVersion = unparsedVersion[1]
+        shellVersion = lineFields[1]
 
         print(f"Shell: {systemShell} {shellVersion}")
 
