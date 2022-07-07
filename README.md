@@ -1,4 +1,4 @@
-[![](https://img.shields.io/badge/Python-3-green)](https://docs.python.org/3)   [![](https://img.shields.io/badge/GPL-2.0-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)    [![](https://img.shields.io/badge/Platform-GNU%2FLinux-yellow)](https://en.wikipedia.org/wiki/Linux)
+<p align="center"><img src="https://img.shields.io/badge/Python-3-green">   <img src="https://img.shields.io/badge/GPL-2.0-blue">   <img src="https://img.shields.io/badge/Platform-GNU%2FLinux-yellow"></p>
 
 
 # euryx
