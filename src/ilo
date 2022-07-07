@@ -98,3 +98,14 @@ with open("/proc/cpuinfo") as cpuInformationFile:
             print(re.sub('\n', '', lineFields[1]).strip())
         else:
             continue
+
+# Uptime
+
+# Inspired by: https://github.com/dylanaraps/neofetch/blob/master/neofetch
+with open("/proc/uptime") as uptimeFile:
+    fileFields = uptimeFile.read().split()
+    systemUptime = round(float(fileFields[0]))
+
+uptimeMinutes, uptimeHours, uptimeDays = round(systemUptime / 60 % 60), round(systemUptime / 60 / 60), round(systemUptime / 60 / 60 / 24)
+
+print(f'\nUptime: {uptimeDays} day(s)    {uptimeHours} hour(s)    {uptimeMinutes} minute(s)')
