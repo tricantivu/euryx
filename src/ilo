@@ -67,7 +67,7 @@ match systemShell:
     case "bash":
         firstLine = os.popen(f"{systemShell} --version").readline()
 
-        lineFields = firstLine[0].split()
+        lineFields = firstLine.split()
 
         shellVersion = lineFields[3]
 
