@@ -110,3 +110,15 @@ with open("/proc/uptime") as uptimeFile:
 uptimeMinutes, uptimeHours, uptimeDays = systemUptime // 60 % 60, systemUptime // 60 // 60 % 3600, systemUptime // 60 // 60 // 24 % 24
 
 print(f"\nUptime: {uptimeDays} day(s)    {uptimeHours} hour(s)    {uptimeMinutes} minute(s)")
+
+# Memory
+print("\nTotal RAM and Swap:\n")
+
+with open("/proc/meminfo") as memoryInformationFile:
+    for fileLine in memoryInformationFile:
+        if re.match("(Mem|Swap)Total", fileLine):
+            lineFields = fileLine.split(":")
+            # Parse memory
+            totalMemory = int(re.sub("[A-Za-z]+|\n", "", lineFields[1]).strip())
+            # Convert to gigabytes
+            print(f'{totalMemory // 1048576} GB')
