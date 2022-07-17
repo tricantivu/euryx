@@ -14,7 +14,7 @@ RESET = "\033[0m"
 argumentParser = argparse.ArgumentParser(
     usage="ilo [OPTION]...",
     epilog="Author: Alejandro Cervera",
-    description="Show system information with some eye candy.")
+    description="Show information of a Linux system.")
 
 scriptArguments = argumentParser.parse_args()
 
@@ -22,19 +22,11 @@ if sys.platform != "linux":
     print(f"{LIGHT_RED}ERROR:{RESET} Information will only be shown for Linux systems.")
     sys.exit(1)
 
+# Show a simple message.
 with open("/proc/sys/kernel/hostname") as hostnameFile:
     systemHostname = re.sub("\n", "", hostnameFile.read())
 
-# Print a nice banner.
-
-# Dynamically create part of the banner.
-remainingBanner = "-" * len(f"{os.getenv('USER')}@{systemHostname}")
-
-print(f"""
-{LIGHT_YELLOW}------------------------{remainingBanner}{RESET}
-System information for: {os.getenv('USER')}@{systemHostname}
-{LIGHT_YELLOW}------------------------{remainingBanner}{RESET}
-""")
+print(f"Information for system: {os.getenv('USER')}@{systemHostname}\n")
 
 # Distribution.
 
