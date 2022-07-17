@@ -36,7 +36,9 @@ System information for: {os.getenv('USER')}@{systemHostname}
 {LIGHT_YELLOW}------------------------{remainingBanner}{RESET}
 """)
 
-# Show system information.
+# Distribution.
+
+# pylint: disable=pointless-string-statement
 
 """
 Get a dictionary with keys and values set in os-release file.
@@ -57,9 +59,13 @@ distributionName = re.sub('"|\n', "", keyValuePairs['NAME'])
 
 print(f"Distribution: {distributionName}")
 
-# Shell and version.
+# pylint: disable=pointless-string-statement
 
-# Reference: https://linuxhandbook.com/execute-shell-command-python
+"""
+Shell and version.
+
+Reference: https://linuxhandbook.com/execute-shell-command-python
+"""
 
 systemShell = os.path.basename(os.getenv("SHELL"))
 
@@ -94,14 +100,20 @@ with open("/proc/cpuinfo") as cpuInformationFile:
     for fileLine in cpuInformationFile:
         if re.match("^(model name)", fileLine):
             lineFields = fileLine.split(":")
-            # Remove trailing newline and spaces from model name.
             print(re.sub("\n", "", lineFields[1]).strip())
         else:
             continue
 
-# Uptime
+# pylint: disable=pointless-string-statement
 
-# Inspired by: https://github.com/dylanaraps/neofetch/blob/master/neofetch
+"""
+Uptime
+
+Inspired by: https://github.com/dylanaraps/neofetch/blob/master/neofetch
+"""
+
+# pylint: disable=anomalous-backslash-in-string
+
 with open("/proc/uptime") as uptimeFile:
     fileFields = uptimeFile.read().split()
     # Remove decimal numbers.
