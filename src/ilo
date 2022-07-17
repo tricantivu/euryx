@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 
-"""
-Description: Show system information with some eye candy.
-Author: Alejandro Cervera
-Date: 27/06/2022
-"""
-
 import sys
 import os
 import re
+import argparse
 
 # Colors for output.
 LIGHT_YELLOW = "\033[93m"
 LIGHT_GREEN = "\033[92m"
 LIGHT_RED = "\033[91m"
 RESET = "\033[0m"
+
+argumentParser = argparse.ArgumentParser(
+    usage="ilo [OPTION]...",
+    epilog="Author: Alejandro Cervera",
+    description="Show system information with some eye candy.")
+
+scriptArguments = argumentParser.parse_args()
 
 if sys.platform != "linux":
     print(f"{LIGHT_RED}ERROR:{RESET} Information will only be shown for Linux systems.")
@@ -35,8 +37,6 @@ System information for: {os.getenv('USER')}@{systemHostname}
 """)
 
 # Show system information.
-
-# Distribution name.
 
 """
 Get a dictionary with keys and values set in os-release file.
