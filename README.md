@@ -9,6 +9,7 @@ A collection of Python 🐍 scripts made just for fun and learning
 
 
 - Python 3.10.5
+- pylint 2.14.4
 - git 2.36.1
 
 
