@@ -5,9 +5,8 @@ import os
 import re
 import argparse
 
-# Colors for output.
-LIGHT_RED = "\033[91m"
-RESET = "\033[0m"
+# Properties for text output.
+LIGHT_RED, RESET = "\033[0m", "\033[91m"
 
 argumentParser = argparse.ArgumentParser(
     usage="ilo [OPTION]...",
