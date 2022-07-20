@@ -10,9 +10,9 @@ import sys
 import argparse
 
 argumentParser = argparse.ArgumentParser(
-    usage="ilo [OPTION]...",
+    usage="hc [OPTION]...",
     epilog="Author: Alejandro Cervera",
-    description="Show system information with some eye candy.")
+    description="Clear shell history file.")
 
 scriptArguments = argumentParser.parse_args()
 
