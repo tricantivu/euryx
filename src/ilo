@@ -44,7 +44,7 @@ with open("/etc/os-release") as fileLines:
         keyValuePairs[key] = value
 
 # Parse distribution name.
-distributionName = re.sub('"|\n', "", keyValuePairs['NAME'])
+distributionName = re.sub("\"|\n", "", keyValuePairs["NAME"])
 
 print(f"Distribution: {distributionName}")
 
@@ -102,4 +102,4 @@ with open("/proc/meminfo") as memoryInformationFile:
             # Parse memory
             totalMemory = int(re.sub("[A-Za-z]+|\n", "", lineFields[1]).strip())
             # Convert to gigabytes
-            print(f'{totalMemory // 1048576} GB')
+            print(f"{totalMemory // 1048576} GB")
