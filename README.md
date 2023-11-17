@@ -14,8 +14,8 @@ version control.
 
 # Optional
 
-- pycodestyle
-- pylint
+- pycodestyle >= 2.11.1
+- pylint >= 3.0.2
 
 ## Installation 💽
 
