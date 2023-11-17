@@ -265,7 +265,7 @@ match args.subcommand:
                 sys.exit(os.EX_UNAVAILABLE)
 
             except OSError:
-                show_error("EDITOR: could not find program '{EDITOR}', ensure"
+                show_error(f"EDITOR: could not find program '{EDITOR}', ensure"
                            " it is installed (e.g., 'which \"${EDITOR}\"')")
 
                 sys.exit(os.EX_UNAVAILABLE)
