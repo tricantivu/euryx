@@ -25,4 +25,8 @@ version control.
 
 ## Coding style
 
+Follow [PEP-8](https://peps.python.org/pep-0008).
+
 ## Commit style
+
+Follow the [Conventional Commits Specification](https://www.conventionalcommits.org/en/v1.0.0/#specification).
