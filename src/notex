@@ -156,9 +156,9 @@ if XDG_DATA_HOME := os.getenv("XDG_DATA_HOME"):
 else:
     BASE_DIR = f"{os.getenv('HOME', default='')}/.local/share/notex"
 
-# The XDG Base Directory (https://specifications.freedesktop.org/basedir-spec/latest/ar01s02.html)
-# specification establishes that all pathnames set in the value of environment
-# variables must be absolute.
+# The XDG Base Directory specification (https://specifications.freedesktop.org/basedir-spec/latest/ar01s02.html)
+# establishes that all pathnames set in the value of environment variables must
+# be absolute.
 if not os.path.isabs(BASE_DIR):
     show_error(f"'{BASE_DIR}': the pathname for the base directory cannot be "
                "relative, replace the value of the environment variable "
