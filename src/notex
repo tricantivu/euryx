@@ -1,0 +1,461 @@
+#!/usr/bin/env python3
+
+"""Note taking command line utility
+
+Usage: notex [-h] SUBCOMMAND ...
+"""
+
+import os
+import sys
+import shutil
+import argparse
+import subprocess
+
+
+def show_error(message):
+    """Write a formatted message to the standard error stream.
+
+    Arguments:
+    message -- String.
+
+    The arguments are preceded by the string "error", a colon, a space,
+    the terminal pathname component of the current file, and a colon.
+    """
+    print(f"error: {os.path.basename(sys.argv[0])}:", message, file=sys.stderr)
+
+
+def read_stdin_lines(hint=-1):
+    """Return a list of lines without trailing newlines read from the
+    standard input stream.
+
+    If the hint argument is not given, lines will be read until EOF.
+
+    Keyword arguments:
+    hint -- Amount of lines to read (default -1).
+    """
+    if type(hint) is not int:
+        raise TypeError("expected an 'int' object, not a "
+                        f"'{type(hint).__name__}'")
+
+    if hint < -1:
+        raise ValueError("expected an integer greater than or equal to -1")
+
+    if hint == -1:
+        return [line.removesuffix("\n") for line in sys.stdin]
+
+    if hint == 0:
+        return []
+
+    lines = []
+
+    for i, line in enumerate(sys.stdin, start=1):
+        if i == hint:
+            break
+
+        lines.append(line.removesuffix("\n"))
+
+    return lines
+
+
+def is_sub_path(path1, path2):
+
+    canon_path = os.path.realpath(f"{path2}/{path1}")
+
+    return canon_path != path2 and canon_path.startswith(path2)
+
+parser = argparse.ArgumentParser(
+    description="Note taking command line utility")
+
+subparsers = parser.add_subparsers(
+    required=True,
+    metavar="SUBCOMMAND",
+    dest="subcommand")
+
+parser_touch = subparsers.add_parser(
+    "touch",
+    help="create notes")
+
+parser_touch.add_argument(
+    "PATHNAMES",
+    nargs="*",
+    help="note pathnames")
+
+parser_mkdir = subparsers.add_parser(
+    "mkdir",
+    help="create notebooks")
+
+parser_mkdir.add_argument(
+    "PATHNAMES",
+    nargs="*",
+    help="notebook pathnames")
+
+parser_edit = subparsers.add_parser(
+    "edit",
+    help="edit notes")
+
+parser_edit.add_argument(
+    "PATHNAMES",
+    nargs="*",
+    help="note pathnames")
+
+parser_cat = subparsers.add_parser(
+    "cat",
+    help="show contents of notes")
+
+parser_cat.add_argument(
+    "PATHNAMES",
+    nargs="*",
+    help="note pathnames")
+
+parser_rm = subparsers.add_parser(
+    "rm",
+    help="remove notes and/or notebooks")
+
+parser_rm.add_argument(
+    "PATHNAMES",
+    nargs="*",
+    help="note and/or notebook pathnames")
+
+parser_ls = subparsers.add_parser(
+    "ls",
+    help="list notes and notebooks in notebooks")
+
+parser_ls.add_argument(
+    "PATHNAMES",
+    nargs="*",
+    help="notebook pathnames")
+
+parser_mv = subparsers.add_parser(
+    "mv",
+    help="move or rename notes and/or notebooks")
+
+parser_mv.add_argument(
+    "SOURCE",
+    nargs="?",
+    help="note or notebook pathname")
+
+parser_mv.add_argument(
+    "DESTINATION",
+    nargs="?",
+    help="note or notebook pathname")
+
+parser_realpath = subparsers.add_parser(
+    "realpath",
+    help="print canonicalized pathnames of notes and/or notebooks")
+
+parser_realpath.add_argument(
+    "PATHNAMES",
+    nargs="*",
+    help="note and/or notebook pathnames")
+
+args = parser.parse_args()
+
+if XDG_DATA_HOME := os.getenv("XDG_DATA_HOME"):
+    BASE_DIR = f"{XDG_DATA_HOME}/notex"
+
+else:
+    BASE_DIR = f"{os.getenv('HOME', default='')}/.local/share/notex"
+
+# The XDG Base Directory (https://specifications.freedesktop.org/basedir-spec/latest/ar01s02.html)
+# specification establishes that all pathnames set in the value of environment
+# variables must be absolute.
+if not os.path.isabs(BASE_DIR):
+    show_error(f"'{BASE_DIR}': the pathname for the base directory cannot be "
+               "relative, replace the value of the environment variable "
+               "'XDG_DATA_HOME' and try again")
+
+    sys.exit(os.EX_TEMPFAIL)
+
+try:
+    os.mkdir(BASE_DIR)
+
+except FileNotFoundError:
+    show_error("could not create base directory, ensure all components of "
+               "the pathname '{os.path.dirname(BASE_DIR)}' exist")
+
+    sys.exit(os.EX_CANTCREAT)
+
+except FileExistsError:
+    ...
+
+match args.subcommand:
+    case "touch":
+        if not args.PATHNAMES:
+            args.PATHNAMES = read_stdin_lines()
+
+        for pathname in args.PATHNAMES:
+            if not is_sub_path(pathname, BASE_DIR):
+                show_error(f"'{pathname}': could not create note, the pathname"
+                           " did not resolve to a file in the base directory")
+
+                sys.exit(os.EX_USAGE)
+
+        for pathname in args.PATHNAMES:
+            try:
+                with open(f"{BASE_DIR}/{pathname}", "x", encoding="utf-8"):
+                    ...
+
+            except FileNotFoundError as e:
+                show_error(f"'{e.filename}': could not create note, ensure "
+                           "all pathname components exist")
+
+                sys.exit(os.EX_CANTCREAT)
+
+            except NotADirectoryError as e:
+                show_error(f"'{e.filename}': could not create note, ensure "
+                           "'{os.path.dirname(pathname)}' is a directory")
+
+                sys.exit(os.EX_CANTCREAT)
+
+            except FileExistsError as e:
+                show_error(f"'{e.filename}': could not create note, there is "
+                           "already a file with the same name")
+
+                sys.exit(os.EX_CANTCREAT)
+
+    case "mkdir":
+        if not args.PATHNAMES:
+            args.PATHNAMES = read_stdin_lines()
+
+        for pathname in args.PATHNAMES:
+            if not is_sub_path(pathname, BASE_DIR):
+                show_error(f"'{pathname}': could not create notebook, the "
+                           "pathname did not resolve to a file in the base "
+                           "directory")
+
+                sys.exit(os.EX_USAGE)
+
+        for pathname in args.PATHNAMES:
+            try:
+                os.mkdir(f"{BASE_DIR}/{pathname}")
+
+            except FileNotFoundError as e:
+                show_error(f"'{e.filename}': could not create notebook, "
+                           "ensure all pathname components exist")
+
+                sys.exit(os.EX_CANTCREAT)
+
+    case "edit":
+        if not args.PATHNAMES:
+            args.PATHNAMES = read_stdin_lines()
+
+        for pathname in args.PATHNAMES:
+            if not is_sub_path(pathname, BASE_DIR):
+                show_error(f"'{pathname}': could not edit note, the pathname "
+                           "did not resolve a file in the base directory")
+
+                sys.exit(os.EX_USAGE)
+
+        if EDITOR := os.getenv("EDITOR"):
+            cmdline = [EDITOR]
+
+            for pathname in args.PATHNAMES:
+                cmdline.append(f"{BASE_DIR}/{pathname}")
+
+            try:
+                subprocess.run(cmdline, stderr=subprocess.PIPE, check=True)
+
+            except subprocess.CalledProcessError as e:
+                editor_err = e.stderr.decode().removesuffix("\n")
+
+                show_error("EDITOR: the program returned the exit code "
+                           f"{e.returncode} and the following output:\n\n"
+                           f"{editor_err}")
+
+                sys.exit(os.EX_UNAVAILABLE)
+
+            except OSError:
+                show_error("EDITOR: could not find program '{EDITOR}', ensure"
+                           " it is installed (e.g., 'which \"${EDITOR}\"')")
+
+                sys.exit(os.EX_UNAVAILABLE)
+
+        else:
+            show_error("the value of the environment variable 'EDITOR' is "
+                       "not set or an empty string, replace or set its value "
+                       "(e.g., 'export EDITOR=vim') and try again")
+
+            sys.exit(os.EX_TEMPFAIL)
+
+    case "cat":
+        if not args.PATHNAMES:
+            args.PATHNAMES = read_stdin_lines()
+
+        for pathname in args.PATHNAMES:
+            if not is_sub_path(pathname, BASE_DIR):
+                show_error(f"'{pathname}': could not show the contents of the "
+                           "note, the pathname did not resolve to a file in "
+                           "the base directory")
+
+                sys.exit(os.EX_USAGE)
+
+        for k, pathname in enumerate(args.PATHNAMES):
+            if k:
+                print(f"\nNote '{pathname}':")
+
+            else:
+                print(f"Note '{pathname}':")
+
+            try:
+                with open(f"{BASE_DIR}/{pathname}", encoding="utf-8") as note:
+                    print(*note.readlines(), sep="", end="")
+
+            except IsADirectoryError as e:
+                show_error(f"'{e.filename}': cannot show the contents of a "
+                           "notebook, ensure the pathname refers to a note")
+
+                sys.exit(os.EX_NOINPUT)
+
+            except FileNotFoundError as e:
+                show_error(f"'{e.filename}': could not show the contents of "
+                           "the note, ensure all pathname components exist")
+
+                sys.exit(os.EX_NOINPUT)
+
+    case "rm":
+        for pathname in args.PATHNAMES:
+            if not is_sub_path(pathname, BASE_DIR):
+                show_error(f"'{pathname}': could not remove note or notebook, "
+                           "the pathname did not resolve to a file in the "
+                           "base directory")
+
+                sys.exit(os.EX_USAGE)
+
+        for pathname in args.PATHNAMES:
+            try:
+                if os.path.isfile(f"{BASE_DIR}/{pathname}"):
+                    os.unlink(f"{BASE_DIR}/{pathname}")
+
+                elif os.path.isdir(f"{BASE_DIR}/{pathname}"):
+                    shutil.rmtree(f"{BASE_DIR}/{pathname}")
+
+            except IsADirectoryError as e:
+                show_error(f"'{e.filename}': note changed file type, ensure "
+                           "it is a regular file")
+
+                sys.exit(os.EX_NOINPUT)
+
+            except NotADirectoryError as e:
+                show_error(f"'{e.filename}': notebook changed file, ensure it "
+                           "is a directory")
+
+                sys.exit(os.EX_NOINPUT)
+
+    case "ls":
+        if args.PATHNAMES:
+            for pathname in args.PATHNAMES:
+                if not is_sub_path(pathname, BASE_DIR):
+                    show_error(f"'{pathname}': could not list the contents of "
+                               "the notebook, the pathname does not resolve "
+                               "to a file in the base directory")
+
+                    sys.exit(os.EX_USAGE)
+
+            for j, pathname in enumerate(args.PATHNAMES):
+                note_names, notebook_names = [], []
+
+                try:
+                    with os.scandir(f"{BASE_DIR}/{pathname}") as dentries:
+                        for dentry in dentries:
+                            if dentry.is_file():
+                                note_names.append(dentry.name)
+
+                            elif dentry.is_dir():
+                                notebook_names.append(f"{dentry.name}/")
+
+                except NotADirectoryError as e:
+                    show_error(f"'{e.filename}': could not list the notes and "
+                               "notebooks, ensure the pathname refers to a "
+                               "notebook")
+
+                    sys.exit(os.EX_NOINPUT)
+
+                except FileNotFoundError as e:
+                    show_error(f"'{e.filename}': could not list the notes and "
+                               "notebooks, ensure all pathname components "
+                               "exist")
+
+                    sys.exit(os.EX_NOINPUT)
+
+                if j:
+                    print("\nNotebook '{pathname}':")
+
+                else:
+                    print("Notebook '{pathname}':")
+
+                if not note_names and not notebook_names:
+                    print(end="")
+
+                else:
+                    print(*note_names, *notebook_names, sep="\n")
+
+        else:
+            note_names, notebook_names = [], []
+
+            try:
+                with os.scandir(BASE_DIR) as dentry_iterator:
+                    for dentry in dentry_iterator:
+                        if dentry.is_file():
+                            note_names.append(dentry.name)
+
+                        elif dentry.is_dir():
+                            notebook_names.append(f"{dentry.name}/")
+
+            except FileNotFoundError:
+                show_error("base directory did not exist, run the command "
+                           "again to create it")
+
+                sys.exit(os.EX_NOINPUT)
+
+            print(*note_names, *notebook_names, sep="\n")
+
+    case "mv":
+        if args.SOURCE is None and args.DESTINATION is None:
+            new_args = read_stdin_lines(2)
+
+            if len(new_args) == 2:
+                args.SOURCE, args.DESTINATION = new_args
+
+            else:
+                show_error("expected two lines from the standard input "
+                           "stream with the source and destination "
+                           "pathname, read {len(lines)}")
+
+                sys.exit(os.EX_NOINPUT)
+
+        elif args.SOURCE is None or args.DESTINATION is None:
+            show_error("missing source or destination pathname")
+            sys.exit(os.EX_USAGE)
+
+        for pathname in args.PATHNAMES:
+            if not is_sub_path(pathname, BASE_DIR):
+                show_error(f"'{e.filename}': could not move note or notebook, "
+                           "the pathname did not resolve to a file in the "
+                           "base directory")
+
+                sys.exit(os.EX_USAGE)
+        try:
+            # TODO: Only move regular files and directories.
+            shutil.move(f"{BASE_DIR}/{args.SOURCE}",
+                        f"{BASE_DIR}/{args.DESTINATION}")
+
+        except FileNotFoundError as e:
+            show_error("'{e.filename}': could not move note or notebook, "
+                       "ensure all pathname components exist")
+
+            sys.exit(os.EX_NOINPUT)
+
+    case "realpath":
+        if not args.PATHNAMES:
+            args.PATHNAMES = read_stdin_lines()
+
+        try:
+            for pathname in args.PATHNAMES:
+                print(os.path.realpath(f"{BASE_DIR}/{pathname}", strict=True))
+
+        except OSError:
+            show_error(f"'{e.filename}': could not canonicalize pathname, "
+                       "ensure all components exist and are not symbolic "
+                       "links")
+
+            sys.exit(os.EX_NOINPUT)
