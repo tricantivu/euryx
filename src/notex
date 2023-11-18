@@ -427,7 +427,7 @@ match args.subcommand:
             show_error("missing source or destination pathname")
             sys.exit(os.EX_USAGE)
 
-        for pathname in args.PATHNAMES:
+        for pathname in (args.SOURCE, args.DESTINATION):
             if not is_sub_path(pathname, BASE_DIR):
                 show_error(f"'{e.filename}': could not move note or notebook, "
                            "the pathname did not resolve to a file in the "
