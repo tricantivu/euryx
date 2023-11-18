@@ -57,17 +57,17 @@ def read_stdin_lines(hint=-1):
     return lines
 
 
-def is_sub_path(path1, path2):
+def is_sub_path(tail, head):
     """Return True if a POSIX pathname is a sub-path of another POSIX
     pathname.
 
     Arguments:
-    path1 -- String with a POSIX pathname.
-    path2 -- String with a POSIX pathname.
+    tail -- String with a POSIX pathname.
+    head -- String with a POSIX pathname.
     """
-    canon_path = os.path.realpath(f"{path2}/{path1}")
+    canon_path = os.path.realpath(f"{head}/{tail}")
 
-    return canon_path != path2 and canon_path.startswith(path2)
+    return canon_path != head and canon_path.startswith(head)
 
 parser = argparse.ArgumentParser(
     description="Note taking command line utility")
