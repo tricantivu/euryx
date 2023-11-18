@@ -378,10 +378,10 @@ match args.subcommand:
                     sys.exit(os.EX_NOINPUT)
 
                 if j:
-                    print("\nNotebook '{pathname}':")
+                    print(f"\nNotebook '{pathname}':")
 
                 else:
-                    print("Notebook '{pathname}':")
+                    print(f"Notebook '{pathname}':")
 
                 if not note_names and not notebook_names:
                     print(end="")
