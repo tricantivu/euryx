@@ -391,10 +391,7 @@ match args.subcommand:
                 else:
                     print(f"Notebook '{pathname}':")
 
-                if not note_names and not notebook_names:
-                    print(end="")
-
-                else:
+                if note_names or notebook_names:
                     print(*note_names, *notebook_names, sep="\n")
 
         else:
