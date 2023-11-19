@@ -94,6 +94,10 @@ The command terminated without errors or warnings.
 
 A command line argument is missing or was not specified correctly.
 
+- 65 (**EX_DATAERR**):
+
+A note was not encoded with UTF-8.
+
 - 66 (**EX_NOINPUT**):
 
 A note or notebook did not exist or a pathname referred to a file with an\

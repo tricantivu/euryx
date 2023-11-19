@@ -315,6 +315,13 @@ match args.subcommand:
 
                 sys.exit(os.EX_NOINPUT)
 
+            except UnicodeDecodeError as e:
+                show_error(f"'{note.name}': could not show the contents of "
+                           f"the note, ensure its encoded with '{e.encoding}' "
+                           f"(e.g. 'file {note.name}')")
+
+                sys.exit(os.EX_DATAERR)
+
     case "rm":
         for pathname in args.PATHNAMES:
             if not is_sub_path(pathname, BASE_DIR):
