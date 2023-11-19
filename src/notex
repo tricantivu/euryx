@@ -317,10 +317,10 @@ match args.subcommand:
                 sys.exit(os.EX_DATAERR)
 
             if k:
-                print(f"\nNote '{pathname}':")
+                print(f"\nNote '{os.path.realpath(pathname)}':")
 
             else:
-                print(f"Note '{pathname}':")
+                print(f"Note '{os.path.realpath(pathname)}':")
 
             print(*note_lines, sep="", end="")
 
@@ -388,10 +388,10 @@ match args.subcommand:
                     sys.exit(os.EX_NOINPUT)
 
                 if j:
-                    print(f"\nNotebook '{pathname}':")
+                    print(f"\nNotebook '{os.path.realpath(pathname)}':")
 
                 else:
-                    print(f"Notebook '{pathname}':")
+                    print(f"Notebook '{os.path.realpath(pathname)}':")
 
                 if note_names or notebook_names:
                     print(*note_names, *notebook_names, sep="\n")
