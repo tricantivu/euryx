@@ -293,15 +293,9 @@ match args.subcommand:
 
                 sys.exit(os.EX_USAGE)
 
-            if k:
-                print(f"\nNote '{pathname}':")
-
-            else:
-                print(f"Note '{pathname}':")
-
             try:
                 with open(f"{BASE_DIR}/{pathname}", encoding="utf-8") as note:
-                    print(*note.readlines(), sep="", end="")
+                    note_lines = note.readlines()
 
             except IsADirectoryError as e:
                 show_error(f"'{e.filename}': cannot show the contents of a "
@@ -321,6 +315,14 @@ match args.subcommand:
                            f"(e.g. 'file {note.name}')")
 
                 sys.exit(os.EX_DATAERR)
+
+            if k:
+                print(f"\nNote '{pathname}':")
+
+            else:
+                print(f"Note '{pathname}':")
+
+            print(*note_lines, sep="", end="")
 
     case "rm":
         for pathname in args.PATHNAMES:
