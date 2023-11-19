@@ -196,7 +196,6 @@ match args.subcommand:
 
                 sys.exit(os.EX_USAGE)
 
-        for pathname in args.PATHNAMES:
             try:
                 with open(f"{BASE_DIR}/{pathname}", "x", encoding="utf-8"):
                     ...
@@ -231,7 +230,6 @@ match args.subcommand:
 
                 sys.exit(os.EX_USAGE)
 
-        for pathname in args.PATHNAMES:
             try:
                 os.mkdir(f"{BASE_DIR}/{pathname}")
 
@@ -245,17 +243,17 @@ match args.subcommand:
         if not args.PATHNAMES:
             args.PATHNAMES = read_stdin_lines()
 
-        for pathname in args.PATHNAMES:
-            if not is_sub_path(pathname, BASE_DIR):
-                show_error(f"'{pathname}': could not edit note, the pathname "
-                           "did not resolve a file in the base directory")
-
-                sys.exit(os.EX_USAGE)
-
         if EDITOR := os.getenv("EDITOR"):
             cmdline = [EDITOR]
 
             for pathname in args.PATHNAMES:
+                if not is_sub_path(pathname, BASE_DIR):
+                    show_error(f"'{pathname}': could not edit note, the "
+                               "pathname did not resolve a file in the "
+                               "base directory")
+
+                    sys.exit(os.EX_USAGE)
+
                 cmdline.append(f"{BASE_DIR}/{pathname}")
 
             try:
@@ -287,7 +285,7 @@ match args.subcommand:
         if not args.PATHNAMES:
             args.PATHNAMES = read_stdin_lines()
 
-        for pathname in args.PATHNAMES:
+        for k, pathname in enumerate(args.PATHNAMES):
             if not is_sub_path(pathname, BASE_DIR):
                 show_error(f"'{pathname}': could not show the contents of the "
                            "note, the pathname did not resolve to a file in "
@@ -295,7 +293,6 @@ match args.subcommand:
 
                 sys.exit(os.EX_USAGE)
 
-        for k, pathname in enumerate(args.PATHNAMES):
             if k:
                 print(f"\nNote '{pathname}':")
 
@@ -327,7 +324,6 @@ match args.subcommand:
 
                 sys.exit(os.EX_USAGE)
 
-        for pathname in args.PATHNAMES:
             try:
                 if os.path.isfile(f"{BASE_DIR}/{pathname}"):
                     os.unlink(f"{BASE_DIR}/{pathname}")
@@ -349,7 +345,7 @@ match args.subcommand:
 
     case "ls":
         if args.PATHNAMES:
-            for pathname in args.PATHNAMES:
+            for j, pathname in enumerate(args.PATHNAMES):
                 if not is_sub_path(pathname, BASE_DIR):
                     show_error(f"'{pathname}': could not list the contents of "
                                "the notebook, the pathname does not resolve "
@@ -357,7 +353,6 @@ match args.subcommand:
 
                     sys.exit(os.EX_USAGE)
 
-            for j, pathname in enumerate(args.PATHNAMES):
                 note_names, notebook_names = [], []
 
                 try:
