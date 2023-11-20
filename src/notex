@@ -69,7 +69,17 @@ def is_sub_path(tail, head):
 
     return canon_path != head and canon_path.startswith(head)
 
-parser = argparse.ArgumentParser(
+
+class CustomArgumentParser(argparse.ArgumentParser):
+    """Override the exit code returned by the method
+    ArgumentParser.error from the argparse module."""
+    def error(self, message):
+
+        self.print_usage(file=sys.stderr)
+        self.exit(os.EX_USAGE, f"{self.prog}: error: {message}\n")
+
+
+parser = CustomArgumentParser(
     description="Note taking command line utility")
 
 subparsers = parser.add_subparsers(
