@@ -374,8 +374,8 @@ match args.subcommand:
                 sys.exit(os.EX_NOINPUT)
 
             except NotADirectoryError as e:
-                show_error(f"'{e.filename}': notebook changed file, ensure it "
-                           "is a directory")
+                show_error(f"'{e.filename}': notebook changed file type, "
+                           "ensure it is a directory")
 
                 sys.exit(os.EX_NOINPUT)
 
