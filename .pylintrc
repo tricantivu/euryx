@@ -524,7 +524,12 @@ spelling-dict=en_US
 spelling-ignore-comment-directives=fmt: on,fmt: off,noqa:,noqa,nosec,isort:skip,mypy:
 
 # List of comma separated words that should not be checked.
-spelling-ignore-words=
+spelling-ignore-words=XDG,
+                        EOF,
+                        notex,
+                        argparse,
+                        pathname,
+                        pathnames
 
 # A path to a file that contains the private dictionary; one word per line.
 spelling-private-dict-file=
