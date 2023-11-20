@@ -182,12 +182,21 @@ if not os.path.isabs(BASE_DIR):
 
     sys.exit(os.EX_TEMPFAIL)
 
+# Avoid walking into directories that have already been visited while the
+# creating the base directory.
+if ".." in BASE_DIR:
+    show_error(f"'{BASE_DIR}': the pathname for the base directory cannot "
+               "have '..' components, replace the value of the "
+               "environment variable 'XDG_DATA_HOME' and try again")
+
+    sys.exit(os.EX_TEMPFAIL)
+
 try:
-    os.mkdir(BASE_DIR)
+    os.makedirs(BASE_DIR)
 
 except FileNotFoundError:
-    show_error("could not create base directory, ensure all components of "
-               "the pathname '{os.path.dirname(BASE_DIR)}' exist")
+    show_error(f"'{BASE_DIR}': could not create base directory, "
+               "a parent was removed")
 
     sys.exit(os.EX_CANTCREAT)
 
