@@ -200,6 +200,14 @@ except FileNotFoundError:
 
     sys.exit(os.EX_CANTCREAT)
 
+except PermissionError:
+    show_error(f"'{BASE_DIR}': cannot create base directory, maybe add the "
+               "write and/or execute file mode bit to a parent (e.g., "
+               f"'chmod +w {os.path.dirname(BASE_DIR)}' and/or "
+               f"'chmod +x {os.path.dirname(BASE_DIR)}')")
+
+    sys.exit(os.EX_CANTCREAT)
+
 except FileExistsError:
     ...
 
