@@ -9,7 +9,7 @@ install:
 		install -m 775 $${file} $(bindir); done
 
 	for file in man/*; do\
-		pandoc -s -f man -t markdown $${file} | \
+		pandoc -s -f markdown -t man $${file} | \
 		gzip -c - > $(man1dir)/$$(basename $${file} .md)$(manext).gz; \
 		chmod 664 $(man1dir)/$$(basename $${file} .md)$(manext).gz; done
 
