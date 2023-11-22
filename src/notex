@@ -236,7 +236,7 @@ match args.subcommand:
 
             except NotADirectoryError as e:
                 show_error(f"'{e.filename}': could not create note, ensure "
-                           "'{os.path.dirname(pathname)}' is a directory")
+                           f"'{os.path.dirname(pathname)}' is a directory")
 
                 sys.exit(os.EX_CANTCREAT)
 
@@ -454,7 +454,7 @@ match args.subcommand:
             else:
                 show_error("expected two lines from the standard input "
                            "stream with the source and destination "
-                           "pathname, read {len(lines)}")
+                           f"pathname, read {len(lines)}")
 
                 sys.exit(os.EX_NOINPUT)
 
