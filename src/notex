@@ -475,7 +475,7 @@ match args.subcommand:
                         f"{BASE_DIR}/{args.DESTINATION}")
 
         except FileNotFoundError as e:
-            show_error("'{e.filename}': could not move note or notebook, "
+            show_error(f"'{e.filename}': could not move note or notebook, "
                        "ensure all pathname components exist")
 
             sys.exit(os.EX_NOINPUT)
