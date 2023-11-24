@@ -454,7 +454,7 @@ match args.subcommand:
             else:
                 show_error("expected two lines from the standard input "
                            "stream with the source and destination "
-                           f"pathname, read {len(lines)}")
+                           f"pathname, read {len(new_args)}")
 
                 sys.exit(os.EX_NOINPUT)
 
